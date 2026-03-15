@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "dev.vikey"
-version = "0.1.0"
+version = "0.1.1"
 
 application {
     mainClass.set("dev.vikey.devlog.MainKt")
