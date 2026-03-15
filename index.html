@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevLog — Stop Writing Standups. Let Your Code Speak.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: #111118;
+    --bg-terminal: #0d0d14;
+    --green: #00ff88;
+    --green-dim: #00cc6a;
+    --green-glow: rgba(0, 255, 136, 0.15);
+    --green-glow-strong: rgba(0, 255, 136, 0.3);
+    --text: #e8e8ef;
+    --text-dim: #8888a0;
+    --text-muted: #555568;
+    --border: #1a1a28;
+    --border-hover: #2a2a3d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ===== GRAIN OVERLAY ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ===== GRID BACKGROUND ===== */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== GLOW ORBS ===== */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 {
+    width: 600px; height: 600px;
+    background: rgba(0, 255, 136, 0.06);
+    top: -200px; left: -100px;
+    animation: float 20s ease-in-out infinite;
+  }
+  .orb-2 {
+    width: 400px; height: 400px;
+    background: rgba(0, 180, 255, 0.04);
+    bottom: 10%; right: -100px;
+    animation: float 25s ease-in-out infinite reverse;
+  }
+  .orb-3 {
+    width: 500px; height: 500px;
+    background: rgba(0, 255, 136, 0.04);
+    top: 60%; left: 30%;
+    animation: float 30s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(30px, -40px); }
+    66% { transform: translate(-20px, 30px); }
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(10, 10, 15, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--green);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-logo .prompt {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta {
+    background: var(--green) !important;
+    color: var(--bg) !important;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: all 0.2s !important;
+  }
+  .nav-cta:hover {
+    box-shadow: 0 0 20px var(--green-glow-strong);
+    transform: translateY(-1px);
+  }
+
+  /* ===== SECTIONS ===== */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 100px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    background: var(--bg-card);
+    animation: fadeInUp 0.8s ease both;
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--green-glow-strong); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
+  }
+
+  .hero h1 {
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+    animation: fadeInUp 0.8s ease 0.1s both;
+  }
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--green), #00ccff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: clamp(17px, 2vw, 20px);
+    color: var(--text-dim);
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    font-weight: 300;
+    animation: fadeInUp 0.8s ease 0.2s both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeInUp 0.8s ease 0.3s both;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green);
+    color: var(--bg);
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.25s;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 40px var(--green-glow-strong), 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+  }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text);
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: all 0.25s;
+  }
+  .btn-secondary:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-glow);
+  }
+
+  /* ===== TERMINAL DEMO ===== */
+  .terminal-wrapper {
+    margin-top: 80px;
+    width: 100%;
+    max-width: 700px;
+    animation: fadeInUp 0.8s ease 0.4s both;
+  }
+  .terminal {
+    background: var(--bg-terminal);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(0,255,136,0.05),
+      0 20px 60px rgba(0,0,0,0.5),
+      0 0 100px rgba(0,255,136,0.03);
+  }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+  }
+  .terminal-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+  .terminal-dot.r { background: #ff5f57; }
+  .terminal-dot.y { background: #febc2e; }
+  .terminal-dot.g { background: #28c840; }
+  .terminal-title {
+    flex: 1;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-right: 44px;
+  }
+  .terminal-body {
+    padding: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    min-height: 220px;
+  }
+  .terminal-body .prompt-line {
+    color: var(--text-dim);
+  }
+  .terminal-body .prompt-symbol {
+    color: var(--green);
+  }
+  .terminal-body .command {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .terminal-body .output {
+    color: var(--text-dim);
+    margin-top: 12px;
+    padding-left: 0;
+    opacity: 0;
+    animation: typeIn 0.5s ease 1.5s forwards;
+  }
+  .terminal-body .output .ai-tag {
+    color: var(--green);
+    font-weight: 700;
+  }
+  .cursor-blink {
+    display: inline-block;
+    width: 8px;
+    height: 18px;
+    background: var(--green);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  @keyframes typeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== FEATURES GRID ===== */
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--green);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-label::before {
+    content: '//';
+    color: var(--text-muted);
+  }
+  .section-title {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .section-subtitle {
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 560px;
+    font-weight: 300;
+    margin-bottom: 64px;
+  }
+
+  .features {
+    padding-top: 120px;
+    padding-bottom: 80px;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 28px;
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .feature-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.3), 0 0 0 1px var(--green-glow);
+  }
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+    background: var(--green-glow);
+    border: 1px solid rgba(0,255,136,0.1);
+  }
+  .feature-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .feature-card p {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  /* ===== COMMANDS ===== */
+  .commands {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  .commands-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 780px;
+  }
+  .cmd-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+    padding: 20px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.25s;
+  }
+  .cmd-row:hover {
+    border-color: rgba(0,255,136,0.2);
+    background: rgba(0,255,136,0.02);
+  }
+  .cmd-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: var(--green);
+    font-weight: 500;
+  }
+  .cmd-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  /* ===== ADVANCED USAGE ===== */
+  .usage {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  .usage-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .usage-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.25s;
+  }
+  .usage-card:hover {
+    border-color: var(--border-hover);
+  }
+  .usage-card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .usage-card pre {
+    background: var(--bg-terminal);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    overflow-x: auto;
+    margin-bottom: 12px;
+  }
+  .usage-card pre .g { color: var(--green); }
+  .usage-card .usage-note {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ===== PROVIDERS ===== */
+  .providers {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  .providers-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .provider-card {
+    flex: 1;
+    min-width: 200px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    text-align: center;
+    transition: all 0.25s;
+  }
+  .provider-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+  }
+  .provider-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .provider-models {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .provider-model {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--green-dim);
+    background: var(--green-glow);
+    padding: 4px 12px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .providers-note {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 20px;
+    font-style: italic;
+  }
+
+  /* ===== INSTALL ===== */
+  .install {
+    padding-top: 80px;
+    padding-bottom: 120px;
+  }
+  .install-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .install-box::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 20%; right: 20%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+  }
+  .install-box h2 {
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 800;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .install-box > p {
+    color: var(--text-dim);
+    font-size: 17px;
+    margin-bottom: 40px;
+  }
+  .install-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 640px;
+    margin: 0 auto 40px;
+  }
+  .install-step {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg-terminal);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    text-align: left;
+  }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--green-glow);
+    border: 1px solid rgba(0,255,136,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
+    flex-shrink: 0;
+  }
+  .step-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .install-box .btn-primary {
+    font-size: 18px;
+    padding: 16px 40px;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  footer a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  footer a:hover { color: var(--green); }
+  footer .footer-tagline {
+    font-style: italic;
+    margin-top: 8px;
+    font-size: 13px;
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    section { padding: 0 20px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .usage-grid { grid-template-columns: 1fr; }
+    .cmd-row { grid-template-columns: 1fr; gap: 6px; }
+    .install-box { padding: 40px 24px; }
+    .providers-row { flex-direction: column; }
+    .hero { padding-top: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo"><span class="prompt">$</span> devlog</a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#commands">Commands</a>
+    <a href="#install">Install</a>
+    <a href="https://github.com/vikey89/DevLog" class="nav-cta">GitHub →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Open source · MIT licensed · Built with Kotlin
+  </div>
+  <h1>Stop writing standups.<br><span class="highlight">Let your code speak.</span></h1>
+  <p>DevLog scans your git history, feeds it to an LLM, and writes your standup, daily summary, or weekly report. One command. Zero effort.</p>
+  <div class="hero-actions">
+    <a href="#install" class="btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+      Get started
+    </a>
+    <a href="https://github.com/vikey89/DevLog" class="btn-secondary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+
+  <div class="terminal-wrapper">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">~/projects</span>
+      </div>
+      <div class="terminal-body">
+        <div class="prompt-line">
+          <span class="prompt-symbol">❯ </span><span class="command">devlog today</span>
+        </div>
+        <div class="output">
+          <br>
+          <span class="ai-tag">✦ DevLog</span> — Summary for March 15, 2026<br><br>
+          Today I focused on the user API and auth flow. I added<br>
+          pagination to the /users endpoint with cursor-based<br>
+          navigation and fixed a null response bug in the auth<br>
+          middleware. I also refactored validation logic into a<br>
+          shared utility and added test coverage for edge cases.<br><br>
+          <span style="color: var(--text-muted)">3 repos · 15 commits · 847 lines changed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="reveal">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+    <p class="section-subtitle">A tiny utility that does one thing well: turns your git history into readable text.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">⚡</div>
+      <h3>Instant</h3>
+      <p>Compiled to a native binary with GraalVM. No JVM startup, no runtime overhead. Launches in milliseconds.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🔀</div>
+      <h3>Multi-repo</h3>
+      <p>Scans all repositories in your configured workspaces and produces a single, coherent summary.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🤖</div>
+      <h3>AI-powered</h3>
+      <p>Uses LLMs to turn raw commits into human-readable summaries. Choose Anthropic, OpenAI, or Gemini.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🔒</div>
+      <h3>Private</h3>
+      <p>Runs entirely on your machine. Nothing is sent anywhere except the LLM API you configure.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">💾</div>
+      <h3>Cached</h3>
+      <p>Results are cached locally so you never pay for the same API call twice on the same day.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">📋</div>
+      <h3>Clipboard-ready</h3>
+      <p>Add <code style="color:var(--green);background:var(--green-glow);padding:2px 6px;border-radius:4px;font-size:12px;">--copy</code> to any command. Paste into Slack, email, or Jira. Done.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMMANDS -->
+<section class="commands" id="commands">
+  <div class="reveal">
+    <div class="section-label">Commands</div>
+    <h2 class="section-title">Five commands.<br>Every situation.</h2>
+    <p class="section-subtitle">From quick standups to custom date range reports.</p>
+  </div>
+  <div class="commands-list">
+    <div class="cmd-row reveal">
+      <span class="cmd-code">devlog today</span>
+      <span class="cmd-desc">End-of-day summary of everything you shipped</span>
+    </div>
+    <div class="cmd-row reveal">
+      <span class="cmd-code">devlog yesterday</span>
+      <span class="cmd-desc">What did I do yesterday? Perfect for morning standups</span>
+    </div>
+    <div class="cmd-row reveal">
+      <span class="cmd-code">devlog standup</span>
+      <span class="cmd-desc">Quick standup-formatted update, ready to paste</span>
+    </div>
+    <div class="cmd-row reveal">
+      <span class="cmd-code">devlog week</span>
+      <span class="cmd-desc">Full weekly digest for your manager or your records</span>
+    </div>
+    <div class="cmd-row reveal">
+      <span class="cmd-code">devlog report --from --to</span>
+      <span class="cmd-desc">Custom date range report for any time period</span>
+    </div>
+  </div>
+</section>
+
+<!-- USAGE -->
+<section class="usage">
+  <div class="reveal">
+    <div class="section-label">Usage</div>
+    <h2 class="section-title">Flexible output.</h2>
+    <p class="section-subtitle">Format your summaries for any destination.</p>
+  </div>
+  <div class="usage-grid">
+    <div class="usage-card reveal">
+      <h4>📎 Copy to clipboard</h4>
+      <pre><span class="g">$</span> devlog standup --copy</pre>
+      <div class="usage-note">Paste it into Slack, email, or anywhere.</div>
+    </div>
+    <div class="usage-card reveal">
+      <h4>📝 Export to Markdown</h4>
+      <pre><span class="g">$</span> devlog week --format markdown --output weekly.md</pre>
+      <div class="usage-note">Clean .md file, ready to share or archive.</div>
+    </div>
+    <div class="usage-card reveal">
+      <h4>💬 Slack formatting</h4>
+      <pre><span class="g">$</span> devlog today --format slack</pre>
+      <div class="usage-note">Bold, italic, and bullet syntax for Slack.</div>
+    </div>
+    <div class="usage-card reveal">
+      <h4>📊 Raw stats, no AI</h4>
+      <pre><span class="g">$</span> devlog today --raw</pre>
+      <div class="usage-note">Just the numbers when you need them.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROVIDERS -->
+<section class="providers">
+  <div class="reveal">
+    <div class="section-label">Providers</div>
+    <h2 class="section-title">Your model. Your choice.</h2>
+    <p class="section-subtitle">Bring your own API key. DevLog supports the major LLM providers — use any model they offer.</p>
+  </div>
+  <div class="providers-row reveal">
+    <div class="provider-card">
+      <div class="provider-name">Anthropic</div>
+      <div class="provider-models">
+        <span class="provider-model">claude-opus-4-6</span>
+        <span class="provider-model">claude-sonnet-4-6</span>
+        <span class="provider-model">claude-haiku-4-5</span>
+      </div>
+    </div>
+    <div class="provider-card">
+      <div class="provider-name">OpenAI</div>
+      <div class="provider-models">
+        <span class="provider-model">gpt-5.4</span>
+        <span class="provider-model">gpt-5-mini</span>
+        <span class="provider-model">gpt-5.3-codex</span>
+      </div>
+    </div>
+    <div class="provider-card">
+      <div class="provider-name">Google</div>
+      <div class="provider-models">
+        <span class="provider-model">gemini-3.1-pro</span>
+        <span class="provider-model">gemini-3-flash</span>
+        <span class="provider-model">gemini-2.5-flash</span>
+      </div>
+    </div>
+  </div>
+  <p class="providers-note reveal">These are just examples — you can configure any model available from each provider.</p>
+</section>
+
+<!-- INSTALL -->
+<section class="install" id="install">
+  <div class="install-box reveal">
+    <h2>Up and running in<br><span style="color: var(--green);">30 seconds</span></h2>
+    <p>Three commands. That's it.</p>
+    <div class="install-steps">
+      <div class="install-step">
+        <span class="step-num">1</span>
+        <span class="step-code">curl -fsSL https://raw.githubusercontent.com/vikey89/DevLog/main/install.sh | sh</span>
+      </div>
+      <div class="install-step">
+        <span class="step-num">2</span>
+        <span class="step-code">devlog init</span>
+      </div>
+      <div class="install-step">
+        <span class="step-num">3</span>
+        <span class="step-code">devlog today</span>
+      </div>
+    </div>
+    <a href="https://github.com/vikey89/DevLog" class="btn-primary">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      Star on GitHub
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Built by <a href="https://github.com/vikey89">vikey89</a> · MIT License · Kotlin + GraalVM</p>
+
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Smooth nav background
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    nav.style.borderBottomColor = window.scrollY > 50 ? 'var(--border)' : 'transparent';
+  });
+</script>
+
+</body>
+</html>
