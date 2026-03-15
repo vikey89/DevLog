@@ -78,8 +78,8 @@ class GitCliDataSource : GitDataSource {
             "git", "log",
             "--format=%H%n%s%n%aI",
             "--numstat",
-            "--since=$since",
-            "--until=$until",
+            "--since=${normalizeDate(since)}",
+            "--until=${normalizeDate(until)}",
         )
         if (author != null) {
             args.add("--author=$author")
@@ -105,7 +105,11 @@ class GitCliDataSource : GitDataSource {
         return output
     }
 
+    private fun normalizeDate(date: String): String =
+        if (date.matches(DATE_ONLY_PATTERN)) "${date}T00:00:00" else date
+
     companion object {
+        private val DATE_ONLY_PATTERN = Regex("\\d{4}-\\d{2}-\\d{2}")
         private const val MAX_SCAN_DEPTH = 4
         private const val MIN_HASH_LENGTH = 7
         private const val NUMSTAT_COLUMNS = 3
