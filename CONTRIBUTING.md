@@ -5,7 +5,7 @@ Thanks for your interest in contributing! DevLog uses Clean Architecture, so mos
 ## Setup
 
 ```bash
-git clone https://github.com/vikey89/devlog.git
+git clone https://github.com/vikey89/DevLog.git
 cd devlog
 ./gradlew build    # requires JDK 21 (Temurin recommended)
 ```

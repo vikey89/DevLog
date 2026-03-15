@@ -3,7 +3,7 @@ set -e
 
 # DevLog installer — downloads the latest release binary for your platform.
 
-REPO="vikey89/devlog"
+REPO="vikey89/DevLog"
 INSTALL_DIR="/usr/local/bin"
 BINARY_NAME="devlog"
 

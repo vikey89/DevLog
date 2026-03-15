@@ -1,7 +1,7 @@
 # DevLog
 
-[![CI](https://github.com/vikey89/devlog/actions/workflows/ci.yml/badge.svg)](https://github.com/vikey89/devlog/actions/workflows/ci.yml)
-[![Release](https://github.com/vikey89/devlog/actions/workflows/release.yml/badge.svg)](https://github.com/vikey89/devlog/releases)
+[![CI](https://github.com/vikey89/DevLog/actions/workflows/ci.yml/badge.svg)](https://github.com/vikey89/DevLog/actions/workflows/ci.yml)
+[![Release](https://github.com/vikey89/DevLog/actions/workflows/release.yml/badge.svg)](https://github.com/vikey89/DevLog/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **AI-powered dev diary from your git history. One command, zero effort.**
@@ -13,7 +13,7 @@ DevLog scans your git repos, collects today's commits, and asks an LLM to write 
 ## Quick start
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/vikey89/devlog/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/vikey89/DevLog/main/install.sh | sh
 devlog init
 devlog today
 ```
@@ -50,17 +50,17 @@ On the mobile side, I started the profile screen with avatar upload.
 ### Install script (Linux / macOS)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/vikey89/devlog/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/vikey89/DevLog/main/install.sh | sh
 ```
 
 ### GitHub Release
 
-Download the binary for your platform from [Releases](https://github.com/vikey89/devlog/releases).
+Download the binary for your platform from [Releases](https://github.com/vikey89/DevLog/releases).
 
 ### From source
 
 ```bash
-git clone https://github.com/vikey89/devlog.git
+git clone https://github.com/vikey89/DevLog.git
 cd devlog
 ./gradlew nativeCompile
 # Binary at: build/native/nativeCompile/devlog
