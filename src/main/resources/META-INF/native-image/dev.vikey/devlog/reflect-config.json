@@ -1,0 +1,346 @@
+[
+  {
+    "name": "[Ljava.lang.Object;"
+  },
+  {
+    "name": "com.github.ajalt.mordant.terminal.terminalinterface.ffm.TerminalInterfaceProviderFfm"
+  },
+  {
+    "name": "com.github.ajalt.mordant.terminal.terminalinterface.jna.TerminalInterfaceProviderJna"
+  },
+  {
+    "name": "com.github.ajalt.mordant.terminal.terminalinterface.nativeimage.TerminalInterfaceProviderNativeImage"
+  },
+  {
+    "name": "com.sun.jna.CallbackProxy",
+    "methods": [{"name": "callback", "parameterTypes": ["java.lang.Object[]"]}]
+  },
+  {
+    "name": "io.ktor.client.HttpClient",
+    "fields": [{"name": "closed"}]
+  },
+  {
+    "name": "io.ktor.client.engine.HttpClientEngineBase",
+    "fields": [{"name": "closed"}]
+  },
+  {
+    "name": "io.ktor.client.engine.cio.CIOEngine",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "io.ktor.client.engine.cio.CIOEngineConfig",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "io.ktor.client.engine.cio.CIO",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "io.ktor.network.selector.InterestSuspensionsMap",
+    "allDeclaredFields": true
+  },
+  {
+    "name": "io.ktor.network.selector.LockFreeMPSCQueue",
+    "fields": [{"name": "curRef"}]
+  },
+  {
+    "name": "io.ktor.network.selector.LockFreeMPSCQueueCore",
+    "fields": [{"name": "nextRef"}, {"name": "stateRef"}]
+  },
+  {
+    "name": "io.ktor.serialization.kotlinx.json.KotlinxSerializationJsonExtensionProvider"
+  },
+  {
+    "name": "io.ktor.util.collections.CopyOnWriteHashMap",
+    "fields": [{"name": "current"}]
+  },
+  {
+    "name": "java.lang.Object",
+    "methods": [{"name": "equals", "parameterTypes": ["java.lang.Object"]}, {"name": "hashCode", "parameterTypes": []}, {"name": "toString", "parameterTypes": []}]
+  },
+  {
+    "name": "java.lang.Thread",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.lang.Throwable",
+    "methods": [{"name": "addSuppressed", "parameterTypes": ["java.lang.Throwable"]}]
+  },
+  {
+    "name": "java.lang.invoke.MethodHandle",
+    "methods": [{"name": "bindTo", "parameterTypes": ["java.lang.Object"]}, {"name": "invokeWithArguments", "parameterTypes": ["java.lang.Object[]"]}]
+  },
+  {
+    "name": "java.lang.invoke.MethodHandles",
+    "methods": [{"name": "lookup", "parameterTypes": []}, {"name": "privateLookupIn", "parameterTypes": ["java.lang.Class", "java.lang.invoke.MethodHandles$Lookup"]}]
+  },
+  {
+    "name": "java.lang.invoke.MethodHandles$Lookup",
+    "methods": [{"name": "findSpecial", "parameterTypes": ["java.lang.Class", "java.lang.String", "java.lang.invoke.MethodType", "java.lang.Class"]}, {"name": "in", "parameterTypes": ["java.lang.Class"]}, {"name": "unreflectSpecial", "parameterTypes": ["java.lang.reflect.Method", "java.lang.Class"]}]
+  },
+  {
+    "name": "java.lang.invoke.MethodType",
+    "methods": [{"name": "methodType", "parameterTypes": ["java.lang.Class", "java.lang.Class[]"]}]
+  },
+  {
+    "name": "java.lang.reflect.Method",
+    "methods": [{"name": "isDefault", "parameterTypes": []}, {"name": "isVarArgs", "parameterTypes": []}]
+  },
+  {
+    "name": "java.nio.Buffer"
+  },
+  {
+    "name": "java.util.concurrent.ForkJoinTask",
+    "fields": [{"name": "aux"}, {"name": "status"}]
+  },
+  {
+    "name": "java.util.concurrent.atomic.AtomicReference",
+    "fields": [{"name": "value"}]
+  },
+  {
+    "name": "jdk.internal.misc.Unsafe"
+  },
+  {
+    "name": "kotlin.SafePublicationLazyImpl",
+    "fields": [{"name": "_value"}]
+  },
+  {
+    "name": "kotlin.reflect.jvm.internal.ReflectionFactoryImpl"
+  },
+  {
+    "name": "kotlinx.coroutines.CancellableContinuationImpl",
+    "fields": [{"name": "_decisionAndIndex$volatile"}, {"name": "_parentHandle$volatile"}, {"name": "_state$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.CancelledContinuation",
+    "fields": [{"name": "_resumed$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.CompletedExceptionally",
+    "fields": [{"name": "_handled$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.DispatchedCoroutine",
+    "fields": [{"name": "_decision$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.EventLoopImplBase",
+    "fields": [{"name": "_delayed$volatile"}, {"name": "_isCompleted$volatile"}, {"name": "_queue$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.JobSupport",
+    "fields": [{"name": "_parentHandle$volatile"}, {"name": "_state$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.JobSupport$Finishing",
+    "fields": [{"name": "_exceptionsHolder$volatile"}, {"name": "_isCompleting$volatile"}, {"name": "_rootCause$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.internal.ConcurrentLinkedListNode",
+    "fields": [{"name": "_next$volatile"}, {"name": "_prev$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.internal.DispatchedContinuation",
+    "fields": [{"name": "_reusableCancellableContinuation$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.internal.LimitedDispatcher",
+    "fields": [{"name": "runningWorkers$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.internal.LockFreeLinkedListNode",
+    "fields": [{"name": "_next$volatile"}, {"name": "_prev$volatile"}, {"name": "_removedRef$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.internal.LockFreeTaskQueue",
+    "fields": [{"name": "_cur$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.internal.LockFreeTaskQueueCore",
+    "fields": [{"name": "_next$volatile"}, {"name": "_state$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.internal.Segment",
+    "fields": [{"name": "cleanedAndPointers$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.internal.ThreadSafeHeap",
+    "fields": [{"name": "_size$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.scheduling.CoroutineScheduler",
+    "fields": [{"name": "_isTerminated$volatile"}, {"name": "controlState$volatile"}, {"name": "parkedWorkersStack$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.scheduling.CoroutineScheduler$Worker",
+    "fields": [{"name": "workerCtl$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.scheduling.WorkQueue",
+    "fields": [{"name": "blockingTasksInBuffer$volatile"}, {"name": "consumerIndex$volatile"}, {"name": "lastScheduledTask$volatile"}, {"name": "producerIndex$volatile"}]
+  },
+  {
+    "name": "kotlinx.coroutines.sync.SemaphoreAndMutexImpl",
+    "fields": [{"name": "_availablePermits$volatile"}, {"name": "deqIdx$volatile"}, {"name": "enqIdx$volatile"}, {"name": "head$volatile"}, {"name": "tail$volatile"}]
+  },
+  {
+    "name": "org.slf4j.nop.NOPServiceProvider"
+  },
+  {
+    "name": "sun.security.provider.NativePRNG",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "sun.security.provider.SHA",
+    "methods": [{"name": "<init>", "parameterTypes": []}]
+  },
+  {
+    "name": "sun.security.ssl.SSLContextImpl$TLSContext",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.Message",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.Message$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.AnthropicRequest",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.AnthropicRequest$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.ContentBlock",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.ContentBlock$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.AnthropicResponse",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.AnthropicResponse$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.OpenAIMessage",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.OpenAIMessage$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.OpenAIRequest",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.OpenAIRequest$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.ChoiceMessage",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.ChoiceMessage$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.Choice",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.Choice$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.OpenAIResponse",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.OpenAIResponse$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.GeminiPart",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.GeminiPart$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.GeminiContent",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.GeminiContent$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.GeminiRequest",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.GeminiRequest$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.Candidate",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.Candidate$Companion",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.GeminiResponse",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "dev.vikey.devlog.data.llm.GeminiResponse$Companion",
+    "allDeclaredMethods": true
+  }
+]

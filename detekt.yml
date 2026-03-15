@@ -1,0 +1,19 @@
+complexity:
+  LongMethod:
+    threshold: 30
+  ComplexCondition:
+    threshold: 4
+  LongParameterList:
+    ignoreDefaultParameters: true
+
+style:
+  MaxLineLength:
+    maxLineLength: 120
+  WildcardImport:
+    active: true
+  MagicNumber:
+    ignoreNumbers: ['-1', '0', '1', '2']
+
+naming:
+  FunctionNaming:
+    functionPattern: '[a-z][a-zA-Z0-9]*'
